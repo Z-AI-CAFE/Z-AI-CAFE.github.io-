@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【超初心者向け】スマホで体験！はじめてのChatGPT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            /* 丸みのあるフォントを優先的に適用 */
+            font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', 'Inter', sans-serif;
+            /* 背景色を非常に淡いピンク系に */
+            background-color: #fff5f7; /* 例: rose-50 */
+            color: #57534e; /* 全体のテキストカラーを少し柔らかく */
+        }
+        .hero-header {
+            /* パステル調のグラデーションに変更 */
+            background: linear-gradient(135deg, #fbcfe8 0%, #fecdd3 50%, #fde68a 100%); /* 例: rose-200, rose-300, amber-200 */
+            border-radius: 24px; /* 角丸を大きく (rounded-3xl) */
+            padding: 3rem 1.5rem; /* パディングを調整 */
+            margin-bottom: 2.5rem;
+            /* 影を柔らかく、色も少しつける */
+            box-shadow: 0 10px 20px -5px rgba(236, 72, 153, 0.2), 0 6px 12px -6px rgba(236, 72, 153, 0.15);
+        }
+        .hero-header h1 {
+            font-weight: 800; /* フォントウェイトを少し調整 */
+            /* テキストシャドウを削除、または非常に薄く */
+            text-shadow: none;
+            color: #832729; /* グラデーションに合う濃いめの暖色 */
+        }
+        .hero-header p {
+            color: #9f3133; /* サブテキストの色も調整 */
+            opacity: 0.9;
+        }
+        .section-card {
+            /* カード背景をオフホワイトまたはごく薄いパステルカラーに */
+            background-color: #fffbfe; /* 例: pink-50 */
+            border-radius: 24px; /* 角丸を大きく (rounded-3xl) */
+            /* 影を柔らかく、拡散させる */
+            box-shadow: 0 6px 12px -3px rgba(0, 0, 0, 0.05), 0 4px 8px -4px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            /* 境界線を削除、または非常に薄く */
+            border: 1px solid #fce7f3; /* 例: rose-100 */
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08), 0 6px 12px -6px rgba(0, 0, 0, 0.04);
+        }
+        .highlight-section {
+            /* 強調セクションの背景色も柔らかく */
+            background-color: #fdf2f8; /* 例: rose-100 */
+            /* 強調ボーダーの色もパステル系に */
+            border: 2px solid #f9a8d4; /* 例: pink-300 */
+            box-shadow: 0 10px 20px -5px rgba(219, 39, 119, 0.15);
+        }
+        .section-header-icon {
+            width: 2.2em;
+            height: 2.2em;
+            margin-right: 0.7em;
+            /* アイコンの色をアクセントカラーに合わせる */
+            color: #db2777; /* 例: pink-600 */
+        }
+        .list-item-icon {
+            width: 1.3em;
+            height: 1.3em;
+            margin-right: 0.6em;
+            /* リストアイコンの色も調整 */
+            color: #f472b6; /* 例: pink-400 */
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+        .gradient-text {
+            /* グラデーションテキストの色をパステル調に */
+            background: linear-gradient(to right, #f472b6, #ec4899); /* 例: pink-400 to pink-600 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            font-weight: 700; /* 少し太くして可読性を上げる */
+        }
+        .target-audience-icon {
+            width: 1.4em;
+            height: 1.4em;
+            margin-right: 0.5em;
+            color: #fb7185; /* 例: rose-500 */
+        }
+
+        /* 手書き風アイコンの例 (チェックマーク) */
+        .custom-checkmark-icon {
+            color: #f472b6; /* pink-400 */
+            /* ここにSVGやFontAwesomeなどのカスタムアイコンを配置できます */
+        }
+        /* ヒーローヘッダーのアイコンを変更 */
+        .hero-main-icon {
+            width: 6rem; /* w-24 */
+            height: 6rem; /* h-24 */
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 1.25rem; /* mb-5 */
+            color: #fda4af; /* rose-300 */
+            opacity: 0.9;
+        }
+
+    </style>
+</head>
+<body class="text-slate-700">
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-full">
+
+        <header class="hero-header text-center">
+            <svg class="hero-main-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.375a6.375 6.375 0 0 0 6.375-6.375V9.375A6.375 6.375 0 0 0 12 3V18.375ZM12 3S5.625 3 5.625 9.375v2.625A6.375 6.375 0 0 0 12 18.375Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.375V9.375h-9v3H12l4.5 3.375V12.375Z" fill="#fef3c7" opacity="0.5"/> {/* 少し遊び心で内部に色付け */
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.375 9.375a.375.375 0 0 1 .375-.375h4.5a.375.375 0 0 1 .375.375v4.5a.375.375 0 0 1-.375.375h-4.5a.375.375 0 0 1-.375-.375V9.375Z" />
+            </svg>
+            <h1 class="text-4xl sm:text-5xl tracking-tight">【超初心者向け】<br>スマホで体験！<br>はじめてのChatGPT</h1>
+            <p class="mt-4 text-lg sm:text-xl opacity-90">～AIとおしゃべりしてみよう～</p>
+        </header>
+
+        <section class="mb-8 p-6 sm:p-8 section-card highlight-section">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6 flex items-center gradient-text">
+                <svg class="section-header-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5M12 12.75h.008v.008H12v-.008Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm4.5-4.5h.008v.008H12v-.008Zm0-2.25h.008v.008H12V9Zm0 9h.008v.008H12v-.008Z" /></svg>
+                開催日時・会場
+            </h2>
+            <div class="space-y-4 text-base sm:text-lg">
+                <p><strong class="font-semibold text-pink-700">日時:</strong> 〇〇年〇月〇日（〇） 〇時～〇時</p>
+                <p><strong class="font-semibold text-pink-700">会場:</strong> 〇〇〇〇</p>
+            </div>
+        </section>
+
+        <section class="mb-8 p-6 sm:p-8 section-card highlight-section">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6 flex items-center gradient-text">
+                <svg class="section-header-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                </svg>
+                こんな方におすすめ
+            </h2>
+            <ul class="space-y-3 text-base sm:text-lg pl-1">
+                <li class="flex items-center"><svg class="target-audience-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.707-4.293a1 1 0 00-1.414-1.414l-1.5 1.5a1 1 0 001.414 1.414L10 11.414l2.207 2.207a1 1 0 001.414-1.414l-1.5-1.5a1 1 0 00-1.414 0L10 10.586 8.293 8.879a1 1 0 10-1.414 1.414L8.586 12l-1.293 1.293zM10 4a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg><span>ChatGPTを使ったことがない方</span></li>
+                <li class="flex items-center"><svg class="target-audience-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.707-4.293a1 1 0 00-1.414-1.414l-1.5 1.5a1 1 0 001.414 1.414L10 11.414l2.207 2.207a1 1 0 001.414-1.414l-1.5-1.5a1 1 0 00-1.414 0L10 10.586 8.293 8.879a1 1 0 10-1.414 1.414L8.586 12l-1.293 1.293zM10 4a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg><span>AIを使ってみたいけど何から始めればよいか分からない方</span></li>
+            </ul>
+        </section>
+
+        <section class="mb-8 p-6 section-card">
+            <h2 class="text-xl sm:text-2xl font-bold mb-5 flex items-center gradient-text">
+                <svg class="section-header-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"></path></svg>
+                このワークショップでできるようになること
+            </h2>
+            <ul class="space-y-3 pl-1 text-sm sm:text-base">
+                <li class="flex items-start"><svg class="list-item-icon mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>ChatGPTがどんなものか、なんとなくわかる。</span></li>
+                <li class="flex items-start"><svg class="list-item-icon mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>自分のスマホでChatGPTのアカウントを作れる。</span></li>
+                <li class="flex items-start"><svg class="list-item-icon mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>ChatGPTに簡単な質問をして、お返事をもらう体験ができる。</span></li>
+                <li class="flex items-start"><svg class="list-item-icon mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><span>ChatGPTを安心して使うための、簡単なルールがわかる。</span></li>
+            </ul>
+        </section>
+
+        <section class="mb-8 p-6 section-card">
+            <h2 class="text-xl sm:text-2xl font-bold mb-5 flex items-center gradient-text">
+                <svg class="section-header-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9V5.25A2.25 2.25 0 0 0 19.5 3h-15A2.25 2.25 0 0 0 2.25 5.25V9m19.5 0v2.25M2.25 9v2.25m0-2.25h.008v.008H2.25V9Zm19.5 0h-.008v.008H21.75V9ZM12 21.75V15M12 15V5.25M12 15H3.75M12 15h8.25"></path></svg>
+                持ち物・準備についてのお願い
+            </h2>
+            <ul class="space-y-4 text-sm sm:text-base">
+                <li>
+                    <div class="flex items-start">
+                        <svg class="list-item-icon mt-1 text-rose-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-1.293 1.293a1 1 0 001.414 1.414L5 13.586V16h10v-2.414l.293.293a1 1 0 001.414-1.414L15 12.586V8a6 6 0 00-6-6zm0 12a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                        <div>
+                            <strong class="font-semibold text-rose-600">スマートフォン（必須）:</strong>
+                            <p class="mt-0.5">インターネットに接続できる状態でお持ちください。Wi-Fi環境はこちらで用意します。</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-start">
+                         <svg class="list-item-icon mt-1 text-sky-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 2l7.997 3.884A2 2 0 0019 7.616V16a2 2 0 01-2 2H3a2 2 0 01-2-2V7.616a2 2 0 001.003-1.732zM10 6a3 3 0 100 6 3 3 0 000-6z" /></svg>
+                        <div>
+                            <strong class="font-semibold text-sky-600">メールアドレス:</strong>
+                            <p class="mt-0.5">ChatGPTのアカウント作成時に使います。事前に使えるメールアドレスをご準備ください。（Gmail、Yahoo!メール、携帯会社のメールアドレスなど）</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-start">
+                        <svg class="list-item-icon mt-1 text-teal-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm4 0h8v10H6V5zm6 2a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+                        <div>
+                            <strong class="font-semibold text-teal-600">タブレットやノートパソコン（もしあればでOK！）:</strong>
+                            <p class="mt-0.5">スマホよりも画面が大きくて操作しやすいので、もしお持ちでしたらぜひご持参ください。必須ではありません。</p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-start">
+                        <svg class="list-item-icon mt-1 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828zM4 14a1 1 0 100 2h12a1 1 0 100-2H4z" /></svg>
+                        <div>
+                            <strong class="font-semibold text-amber-600">筆記用具:</strong>
+                            <p class="mt-0.5">メモを取りたい方はご自由にお持ちください。</p>
+                        </div>
+                    </div>
+                </li>
+                 <li>
+                    <div class="flex items-start">
+                        <svg class="list-item-icon mt-1 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21.75m0 0H3.75m0 0h18M3.75 4.5h16.5M2.25 18.75h19.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" /></svg>
+                        <div>
+                            <strong class="font-semibold text-orange-600">ドリンク代:</strong>
+                            <p class="mt-0.5">受講前に１ドリンクをご注文ください。</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="p-6 sm:p-8 bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50 rounded-3xl shadow-lg border border-pink-200">
+            <h2 class="text-xl sm:text-2xl font-bold mb-5 flex items-center">
+                <svg class="section-header-icon text-pink-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.678 48.678 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"></path></svg>
+                <span class="gradient-text">参加されるみなさんへ</span>
+            </h2>
+            <div class="space-y-3 leading-relaxed text-sm sm:text-base">
+                <p>わからないこと、困ったことがあったら、いつでも遠慮なく講師やスタッフに声をかけてくださいね。</p>
+                <p>間違えても大丈夫！ゆっくり、楽しく、AIとお話しする体験をしてみましょう！</p>
+            </div>
+        </section>
+
+        <footer class="mt-12 pt-8 border-t border-pink-200 text-center text-sm text-pink-700/80"> 
+             <p>&copy; 〇〇〇〇（主催者名など） - ChatGPTワークショップ</p>
+        </footer>
+    </div>
+</body>
+</html>
