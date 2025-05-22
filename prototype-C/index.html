@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>愛知県豊川市八幡町 字名検討資料 - インタラクティブ探索</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Application Structure Plan: 
+        SPA with top navigation. Sections: Introduction, Historical Roots (Yahata Shrine, Kokubunji, Saimyo-ji with clickable details), Stories of the Land (Legends, Koaza list with search/filter), Natural Environment (Topography, Water, Flora with clickable details), Cultural Fabric (Industries, Festivals, Community activities with clickable details).
+        This thematic structure allows users to explore interconnected aspects of Yawata's identity more naturally and engagingly than a linear report format. User flow is via nav bar or scrolling, with interactions encouraging deeper dives into specific topics.
+    -->
+    <!-- Visualization & Content Choices: 
+        - Yahata Shrine/Kokubunji/Saimyo-ji: HTML text, key facts. Interaction: Click to expand details. Justification: Overview + deep dive. Method: HTML, JS.
+        - Koaza: Interactive, searchable/filterable list (Kanji, reading, meaning). Interaction: Search/filter, click to expand. Justification: Manageable exploration of rich data. Method: HTML, JS.
+        - Legends: Clickable titles for summaries. Justification: Storytelling. Method: HTML, JS.
+        - Nature/Culture: Descriptive text, lists. Interaction: Clickable items for details (e.g., Yahata Sakura, festivals). Justification: Highlight key elements. Method: HTML, JS.
+        - No complex charts needed due to qualitative nature of report. Focus on interactive text.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .nav-link { transition: all 0.3s ease; }
+        .nav-link.active { color: #15803d; border-bottom: 2px solid #15803d; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .details { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .details.open { max-height: 1000px; /* Adjust as needed */ }
+        .koaza-item:hover { background-color: #fef3c7; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        /* Tailwind custom scrollbar (optional, for aesthetics) */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fefbec; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b8860b; }
+    </style>
+</head>
+<body class="bg-amber-50 text-stone-800">
+
+    <header class="bg-amber-100 shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-green-700">八幡町探索</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">はじめに</a>
+                        <a href="#history" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">歴史の息吹</a>
+                        <a href="#stories" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">土地の物語</a>
+                        <a href="#nature" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">自然の恵み</a>
+                        <a href="#culture" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">文化と営み</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-stone-700 hover:text-green-700 hover:bg-amber-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500">
+                        <span class="sr-only">メインメニューを開く</span>
+                        <svg class="h-6 w-6" id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" id="menu-icon-close" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#intro" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">はじめに</a>
+                    <a href="#history" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">歴史の息吹</a>
+                    <a href="#stories" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">土地の物語</a>
+                    <a href="#nature" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">自然の恵み</a>
+                    <a href="#culture" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-green-700 hover:bg-amber-200">文化と営み</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <section id="intro" class="content-section pt-8">
+            <h1 class="text-3xl font-bold text-green-700 mb-6">愛知県豊川市八幡町へようこそ</h1>
+            <p class="mb-4 text-lg">このインタラクティブ資料は、愛知県豊川市八幡町の豊かな歴史、地理、そして文化を探求するためのガイドです。八幡町は古代三河国の中心地の一つであり、数多くの史跡や伝承、美しい自然、そして活気ある地域文化に彩られています。</p>
+            <p class="mb-4">ここでは、報告書「愛知県豊川市八幡町 字名検討資料」に基づき、八幡町の魅力を多角的にご紹介します。各セクションを巡りながら、八幡宮の荘厳さ、国分寺・国分尼寺の歴史的意義、西明寺の物語、土地に刻まれた古名（小字）の意味、美しい自然景観、そして地域に根付く祭りや人々の営みに触れてみてください。クリックや検索を通じて、より深い情報へとアクセスできます。八幡町の奥深い世界を、どうぞごゆっくりお楽しみください。</p>
+        </section>
+
+        <section id="history" class="content-section pt-8">
+            <h2 class="text-2xl font-semibold text-green-700 mb-6 border-b-2 border-amber-300 pb-2">歴史の息吹：古代からの遺産 🏛️</h2>
+            <p class="mb-6 text-md">八幡町は、古代三河国の政治・文化の中心地の一つとして栄えました。その歴史を今に伝える重要な社寺が数多く存在します。これらの聖地は、町のアイデンティティ形成に不可欠な役割を果たしてきました。ここでは、八幡宮、三河国分寺・国分尼寺、そして西明寺の歴史と意義を詳しく見ていきましょう。</p>
+
+            <div class="space-y-8">
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">八幡宮：地域の守護神</h3>
+                    <p class="mb-2">白鳳時代(672年)創建と伝わる古社で、応神天皇などを祀ります。三河国分寺の鎮守として崇敬され、武家からの信仰も篤く、徳川家康からも社領を認められました。現存する本殿は室町時代中期(1477年)のもので、国指定重要文化財です。</p>
+                    <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>正式名称：</strong>八幡宮（豊川八幡宮、三河国府八幡宮とも）</p>
+                        <p><strong>祭神：</strong>応神天皇、宗像三女神、神功皇后</p>
+                        <p><strong>本殿様式：</strong>三間社流造、檜皮葺</p>
+                        <p><strong>関連施設：</strong>内宮、外宮、的場、射小屋など</p>
+                        <p><strong>特記事項：</strong>「八幡」の町名はこの八幡宮に由来します。流鏑馬神事が有名です。</p>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">三河国分寺・国分尼寺：天平文化の薫り</h3>
+                    <p class="mb-2">聖武天皇の詔により天平13年(741年)に建立。古代三河国の中心的な寺院でした。旧国分寺境内には七重塔の礎石が残り、現在の国分寺は平安時代の銅鐘（国重文、弁慶の伝説あり）を所蔵。国分尼寺跡は全国最大級の規模を誇り、史跡公園として整備され、天平の里資料館も併設されています。</p>
+                    <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>国分寺：</strong>旧金堂跡付近に再興。曹洞宗。</p>
+                        <p><strong>国分尼寺跡：</strong>八幡町忍地（「尼寺」の転訛とされる）。中門・回廊を復元。</p>
+                        <p><strong>関連遺構：</strong>国府と国分寺を結ぶ古代の舗装道路跡。</p>
+                        <p><strong>テーマ：</strong>「天平」をテーマとした保存・活用が行われています。</p>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">西明寺（旧六光寺）：伝説と国際交流の寺</h3>
+                    <p class="mb-2">平安時代、三河国司 大江定基が愛妾 力寿姫の冥福を祈り創建した「六光寺」が起源。夜毎六つの光明が現れたと伝わります。後に北条時頼、徳川家康により改称。広大な廻遊式庭園、ベルツ博士供養塔、水原秋桜子句碑があります。</p>
+                    <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>創建者：</strong>大江定基（おおえのさだもと）</p>
+                        <p><strong>関連人物：</strong>力寿姫（りきじゅひめ）、北条時頼、徳川家康、エルヴィン・フォン・ベルツ博士、水原秋桜子</p>
+                        <p><strong>文化財：</strong>市指定天然記念物モッコクの大木、廻遊式庭園</p>
+                        <p><strong>小字名：</strong>「上六光寺」「下六光寺」「西六光寺」が今も残ります。</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="stories" class="content-section pt-8">
+            <h2 class="text-2xl font-semibold text-green-700 mb-6 border-b-2 border-amber-300 pb-2">土地の物語：伝承と古名 📜</h2>
+            <p class="mb-6 text-md">八幡町とその周辺には、地域の人々に語り継がれてきた伝説や民話が数多く残されています。また、古い小字名（こあざな）は、その土地の歴史や特徴を今に伝える貴重な手がかりです。ここでは、八幡町の豊かな物語の世界と、地名に込められた意味を探ります。</p>
+            
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-green-600 mb-4">地域の伝説・民話</h3>
+                <ul class="list-disc list-inside space-y-2 pl-4">
+                    <li class="story-item cursor-pointer hover:text-green-500" data-story="benkei">三河国分寺の弁慶の鐘 🔔</li>
+                    <li class="story-item cursor-pointer hover:text-green-500" data-story="saimyoji_legend">西明寺創建伝説（大江定基と力寿姫）💔</li>
+                    <li class="story-item cursor-pointer hover:text-green-500" data-story="ukaisima">鵜飼島の物言わぬ娘 (国府のむかしばなしより) 🌊</li>
+                </ul>
+                <div id="story-details-container" class="mt-4 p-4 bg-amber-100 rounded-lg shadow hidden">
+                    <h4 id="story-title" class="font-semibold text-lg mb-2"></h4>
+                    <p id="story-summary" class="text-sm"></p>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold text-green-600 mb-4">八幡町の旧小字名</h3>
+                <p class="mb-4 text-sm">八幡町には多くの旧小字名があり、それぞれが土地の歴史や自然、人々の営みを反映しています。下の検索ボックスで特定の小字名を検索したり、一覧から気になる名前をクリックして由来を確認できます。</p>
+                <input type="text" id="koaza-search" placeholder="小字名を検索 (例: 本郷)" class="w-full p-2 border border-amber-300 rounded-md mb-4 focus:ring-green-500 focus:border-green-500">
+                <div id="koaza-list" class="space-y-2 max-h-96 overflow-y-auto bg-white p-4 rounded-lg shadow">
+                </div>
+            </div>
+        </section>
+
+        <section id="nature" class="content-section pt-8">
+            <h2 class="text-2xl font-semibold text-green-700 mb-6 border-b-2 border-amber-300 pb-2">自然の恵み：地形と動植物 🌳🏞️</h2>
+            <p class="mb-6 text-md">八幡町は、八幡台地と呼ばれる洪積台地上に位置し、豊かな自然環境に恵まれています。西古瀬川や上宿大池などの水辺、鎮守の森や美しい庭園に見られる植物など、多様な生態系が育まれています。ここでは、八幡町の地形、水系、そして代表的な植物について紹介します。</p>
+
+            <div class="space-y-8">
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">地形とランドフォーム</h3>
+                    <p class="mb-2">八幡町は主に八幡台地と呼ばれる洪積台地上に広がっています。この台地は水はけが良く、古代の遺跡（国分寺など）が洪水を避けて立地するのに適していました。台地の縁辺には斜面があり、周辺には窪地や谷も見られます。西明寺の山号「大宝山」も地域の小高い丘を示唆しています。</p>
+                     <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>主な地形：</strong>八幡台地（洪積台地）</p>
+                        <p><strong>関連地形：</strong>大宝山（西明寺裏山）、坂、窪地</p>
+                        <p><strong>小字名の示唆：</strong>「足洗」（水害関連の窪地か）、「沢渡」（湿地横断）などが地形的特徴を示唆。</p>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">水文学：河川と池</h3>
+                    <p class="mb-2">町内には西古瀬川が流れ、その堤には美しい「八幡桜」が植えられています。また、江戸時代に築造された農業用溜池「上宿大池」は、地域の農業を支えてきました。これらの水辺は、景観だけでなく、人々の生活とも深く結びついています。</p>
+                    <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>西古瀬川：</strong>八幡町宮下を流れる。堤に八幡桜（河津桜）。</p>
+                        <p><strong>上宿大池：</strong>江戸時代に鈴木八右衛門が築造。農業用溜池。現在は散策路も整備。</p>
+                        <p><strong>その他：</strong>八幡宮境内の池（弁天社）、小字名「新堀」（人工水路）など。</p>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">植物相：森と名木</h3>
+                    <p class="mb-2">八幡宮の「鎮守の森」や西明寺の美しい庭園など、緑豊かな場所が多くあります。特に西明寺のモッコク（市指定天然記念物）や、西古瀬川沿いの八幡桜（河津桜）は有名です。</p>
+                    <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>八幡宮：</strong>うっそうとした鎮守の森。タブノキ、スギ、ヒノキ、クスノキなどが見られる可能性。</p>
+                        <p><strong>西明寺：</strong>廻遊式庭園。モッコク（樹齢約400年、市指定天然記念物）、スギ、クスノキ、イチョウ、ヒガンバナなど。</p>
+                        <p><strong>八幡桜：</strong>西古瀬川沿いに約150本の河津桜。早春の風物詩。🌸</p>
+                    </div>
+                </article>
+                 <p class="mt-4 text-sm">八幡町に特有または特に多く見られる野生動物に関する具体的な情報は、提供された資料からは限定的です。さらなる地域調査が期待されます。</p>
+            </div>
+        </section>
+
+        <section id="culture" class="content-section pt-8">
+            <h2 class="text-2xl font-semibold text-green-700 mb-6 border-b-2 border-amber-300 pb-2">文化と営み：伝統と地域活動 🏮🛠️</h2>
+            <p class="mb-6 text-md">八幡町には、古くからの産業や伝統的な祭り、そして活発な住民活動が息づいています。これらは、町の歴史や自然と深く結びつき、地域ならではの文化的景観を形成しています。ここでは、八幡町の経済的遺産、文化的表現、そして地域生活について紹介します。</p>
+
+            <div class="space-y-8">
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">伝統産業と地域産品</h3>
+                    <p class="mb-2">かつては農業が盛んで、上宿大池のような灌漑施設がその基盤を支えました。また、瓦製造（犬塚製瓦所）や、寺社の梵鐘を製作した可能性のある「鐘鋳場」という小字名も残っており、過去の多様な産業の存在を示唆しています。</p>
+                    <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>農業：</strong>上宿大池による灌漑。小字名「沖田」「松田」など。</p>
+                        <p><strong>瓦製造：</strong>犬塚製瓦所（1985年操業停止）。</p>
+                        <p><strong>鐘鋳造：</strong>小字名「鐘鋳場（かねいじば）」が梵鐘製作の可能性を示唆。</p>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">伝統的な祭りや行事</h3>
+                    <p class="mb-2">八幡宮の例大祭（4月）では手筒花火や子供流鏑馬、浦安の舞が奉納されます。秋には三河国分尼寺跡史跡公園で「天平ロマンの夕べ」が開催され、灯籠が幻想的な雰囲気を醸し出します。これらの祭りは、地域の歴史と文化を色濃く反映しています。</p>
+                    <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>八幡宮例大祭：</strong>4月第二土・日。手筒花火、子供流鏑馬、浦安の舞、大弓、富くじ、餅投げなど。</p>
+                        <p><strong>天平ロマンの夕べ：</strong>秋、三河国分尼寺跡史跡公園。約1000個の灯籠、天平衣装体験、浦安の舞、二胡演奏など。</p>
+                    </div>
+                </article>
+
+                <article class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-600 mb-3">住民活動と地域空間</h3>
+                    <p class="mb-2">八幡町内会を中心に、環境美化、安全・防災、文化・レクリエーション、生涯学習など、多岐にわたる地域活動が活発に行われています。「やわた町民館」がその拠点となり、三河国分尼寺跡史跡公園や「くすのき公園」なども住民の憩いの場となっています。</p>
+                    <button class="toggler text-sm text-green-700 hover:text-green-500 font-semibold">詳細を見る ▼</button>
+                    <div class="details mt-2 text-sm space-y-1">
+                        <p><strong>八幡町内会：</strong>清掃活動、防犯、運動会、史跡めぐり、各種講座開催、「八幡桜を育てる会」など。</p>
+                        <p><strong>やわた町民館：</strong>地域活動の拠点。</p>
+                        <p><strong>主な公園：</strong>三河国分尼寺跡史跡公園、くすのき公園、西赤土公園。</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-amber-200 text-center p-6 mt-12">
+        <p class="text-sm text-stone-700">&copy; 豊川市八幡町インタラクティブ資料. Report data from "愛知県豊川市八幡町 字名検討資料".</p>
+    </footer>
+
+    <script>
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconOpen = document.getElementById('menu-icon-open');
+        const menuIconClose = document.getElementById('menu-icon-close');
+
+        function updateActiveSection() {
+            let currentSectionId = 'intro';
+            contentSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 100 && rect.bottom >= 100) { // 100px offset for sticky header
+                    currentSectionId = section.id;
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSectionId}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        function showSection(targetId) {
+            contentSections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                }
+            });
+            updateActiveSection(); // Update nav link active state
+            window.scrollTo({ top: document.getElementById(targetId).offsetTop - 80, behavior: 'smooth' }); // Adjusted for sticky header
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                showSection(targetId);
+                if (mobileMenu.classList.contains('block')) { // Close mobile menu on link click
+                    mobileMenu.classList.remove('block');
+                    mobileMenu.classList.add('hidden');
+                    menuIconOpen.classList.remove('hidden');
+                    menuIconClose.classList.add('hidden');
+                }
+            });
+        });
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('block');
+            menuIconOpen.classList.toggle('hidden');
+            menuIconClose.classList.toggle('hidden');
+        });
+
+        window.addEventListener('scroll', updateActiveSection);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.location.hash) {
+                const targetId = window.location.hash.substring(1);
+                showSection(targetId);
+            } else {
+                showSection('intro'); // Show intro section by default
+            }
+            updateActiveSection(); // Initial active link update
+        });
+
+        const togglers = document.querySelectorAll('.toggler');
+        togglers.forEach(toggler => {
+            toggler.addEventListener('click', () => {
+                const details = toggler.nextElementSibling;
+                details.classList.toggle('open');
+                toggler.textContent = details.classList.contains('open') ? '詳細を隠す ▲' : '詳細を見る ▼';
+            });
+        });
+
+        const storyItems = document.querySelectorAll('.story-item');
+        const storyDetailsContainer = document.getElementById('story-details-container');
+        const storyTitleElem = document.getElementById('story-title');
+        const storySummaryElem = document.getElementById('story-summary');
+
+        const storiesData = {
+            benkei: { title: "三河国分寺の弁慶の鐘", summary: "三河国分寺の古い銅鐘（梵鐘）は、源平合戦の頃、武蔵坊弁慶が陣鐘として用いたため、「乳（ち）」（鐘の表面にある突起状の飾り）の一部が欠けたという伝説があります。この話は、地域の遺物が全国的に有名な英雄譚と結びついていることを示しています。" },
+            saimyoji_legend: { title: "西明寺創建伝説（大江定基と力寿姫）", summary: "平安時代の三河国司・大江定基が、亡くなった愛妾・力寿姫の冥福を祈って「六光寺」（後の西明寺）を創建したと伝えられています。夜毎六つの光明が現れたことから名付けられたというこの物語は、愛と喪失、そして精神的な慰めに彩られ、地域で語り継がれる代表的な伝承です。" },
+            ukaisima: { title: "鵜飼島の物言わぬ娘", summary: "「国府のむかしばなし」に収録されている話で、豊川を隔てて引き裂かれた恋人たちの物語です。八幡町に隣接する国府町の伝承ですが、地域の地理や当時の社会状況を反映している可能性があります。" }
+        };
+
+        storyItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const storyKey = item.dataset.story;
+                if (storiesData[storyKey]) {
+                    storyTitleElem.textContent = storiesData[storyKey].title;
+                    storySummaryElem.textContent = storiesData[storyKey].summary;
+                    storyDetailsContainer.classList.remove('hidden');
+                }
+            });
+        });
+        
+        const koazaData = [
+            { kanji: "足洗", yomi: "あしあらい", meaning: "洪水などの水害に関連する「災害地名」の可能性。過去の水管理や水害リスクを示唆。" },
+            { kanji: "上宿", yomi: "うえじゅく", meaning: "「上の宿場」の意。旧街道沿いの休憩地や宿泊施設があった可能性。上宿大池との関連も。" },
+            { kanji: "大池", yomi: "おおいけ", meaning: "江戸時代に鈴木八右衛門が築造した農業用溜池「上宿大池」に由来。" },
+            { kanji: "沖田", yomi: "おきた", meaning: "「沖の田」「遠くの田」。集落の中心から離れた水田か。" },
+            { kanji: "黒仏", yomi: "くろぶつ", meaning: "黒仏遺跡が存在。黒色の仏像や暗い堂宇の仏像に由来する可能性。" },
+            { kanji: "小柳", yomi: "こやなぎ", meaning: "柳の木が生えていた場所、特に水辺の可能性。" },
+            { kanji: "沢渡", yomi: "さわたり", meaning: "湿地や小川を渡る地点を示唆。" },
+            { kanji: "下天王", yomi: "しもてんのう", meaning: "牛頭天王信仰に関連。「天王」に対する下方の位置を示すか。" },
+            { kanji: "新堀", yomi: "しんぼり", meaning: "新たに開削された水路や堀を示唆。灌漑や排水目的か。" },
+            { kanji: "大宝山", yomi: "たいほうざん", meaning: "西明寺の山号。寺院の正式名称の一部が地名化。" },
+            { kanji: "竹下", yomi: "たけした", meaning: "竹林があった場所。" },
+            { kanji: "佃", yomi: "つくだ", meaning: "開発された水田、あるいは特定の集団による開墾地か。犬塚製瓦所があった。" },
+            { kanji: "寺前", yomi: "てらまえ", meaning: "西明寺または国分寺の門前であった可能性。" },
+            { kanji: "天王", yomi: "てんのう", meaning: "牛頭天王を祀る社があったことを示唆。疫病退散の信仰に関連。" },
+            { kanji: "西赤土", yomi: "にしあかつち", meaning: "「西の赤い土」。土壌の色に由来。" },
+            { kanji: "西六光寺", yomi: "にしろくこうじ", meaning: "西明寺の旧称「六光寺」に由来し、その西側に位置したか。" },
+            { kanji: "忍地", yomi: "にんじ", meaning: "「尼寺」の転訛とされる。三河国分尼寺跡が存在。" },
+            { kanji: "野路", yomi: "のじ", meaning: "野原を通る道を示唆。" },
+            { kanji: "東赤土", yomi: "ひがしあかつち", meaning: "「東の赤い土」。土壌の色に由来。" },
+            { kanji: "本郷", yomi: "ほんごう", meaning: "「元の郷」「中心の集落」。三河国分寺や八幡宮が位置する歴史的中心地。" },
+            { kanji: "松田", yomi: "まつだ", meaning: "松林と水田が近接していた風景を示唆。" },
+            { kanji: "宮下", yomi: "みやした", meaning: "八幡宮の麓や近隣を示唆。八幡桜がある。" },
+            { kanji: "鐘鋳場", yomi: "かねいじば", meaning: "鐘を鋳造する場所。寺社の梵鐘などを製作した工房があった可能性。" },
+            { kanji: "上ノ蔵", yomi: "かみのくら", meaning: "高台にあった蔵か、重要な蔵があった場所。" },
+            { kanji: "上六光寺", yomi: "かみろくこうじ", meaning: "西明寺の旧称「六光寺」に由来し、その上方に位置したか。" },
+            { kanji: "亀が坪", yomi: "かめがつぼ", meaning: "亀に関連する伝説や地形（亀形の窪地や岩など）があった可能性。" },
+            { kanji: "下六光寺", yomi: "しもろくこうじ", meaning: "西明寺の旧称「六光寺」に由来し、その下方に位置したか。" },
+            { kanji: "宮前", yomi: "みやまえ", meaning: "八幡宮の門前や参道沿いを示唆。" },
+            { kanji: "横道", yomi: "よこみち", meaning: "主要な道から分岐する脇道、あるいは横切る道。" },
+            { kanji: "弥五郎", yomi: "やごろう", meaning: "人名に由来する可能性。特定の人物の屋敷跡や開墾地など。" }
+        ];
+
+        const koazaListContainer = document.getElementById('koaza-list');
+        const koazaSearchInput = document.getElementById('koaza-search');
+
+        function displayKoaza(filter = "") {
+            koazaListContainer.innerHTML = '';
+            const filteredData = koazaData.filter(item => 
+                item.kanji.includes(filter) || item.yomi.includes(filter) || item.meaning.includes(filter)
+            );
+
+            if (filteredData.length === 0) {
+                koazaListContainer.innerHTML = '<p class="text-sm text-stone-500">該当する小字名が見つかりません。</p>';
+                return;
+            }
+
+            filteredData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'koaza-item p-3 border-b border-amber-200 cursor-pointer';
+                div.innerHTML = `
+                    <div class="font-semibold text-md text-green-700">${item.kanji} (${item.yomi})</div>
+                    <div class="text-sm text-stone-600 koaza-meaning hidden">${item.meaning}</div>
+                `;
+                div.addEventListener('click', () => {
+                    const meaningDiv = div.querySelector('.koaza-meaning');
+                    meaningDiv.classList.toggle('hidden');
+                });
+                koazaListContainer.appendChild(div);
+            });
+        }
+
+        koazaSearchInput.addEventListener('input', (e) => {
+            displayKoaza(e.target.value);
+        });
+
+        displayKoaza(); // Initial display
+
+    </script>
+</body>
+</html>
