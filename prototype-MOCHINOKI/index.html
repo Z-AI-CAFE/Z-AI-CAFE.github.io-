@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>もちの樹 - 癒やしの庭と手作りサンドイッチ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+        }
+        .hero-bg {
+            background-image: url('https://placehold.co/1200x800/A2D9A0/333333?text=美しい庭とカフェの外観');
+            background-size: cover;
+            background-position: center;
+        }
+        .sandwich-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .workshop-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .section-title {
+            font-size: 2.5rem; /* 40px */
+            font-weight: bold;
+            margin-bottom: 2rem; /* 32px */
+            text-align: center;
+            color: #4A5568; /* gray-700 */
+        }
+        .section-subtitle {
+            font-size: 1.5rem; /* 24px */
+            font-weight: bold;
+            margin-bottom: 1rem; /* 16px */
+            color: #718096; /* gray-600 */
+        }
+        .concept-text {
+            font-size: 1.125rem; /* 18px */
+            line-height: 1.75; /* 28px */
+            color: #4A5568; /* gray-700 */
+        }
+        .menu-item-title {
+            font-size: 1.25rem; /* 20px */
+            font-weight: bold;
+            color: #2D3748; /* gray-800 */
+        }
+        .menu-item-description {
+            font-size: 1rem; /* 16px */
+            color: #4A5568; /* gray-700 */
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary {
+            background-color: #68D391; /* green-400 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #48BB78; /* green-500 */
+        }
+        .nav-link {
+            color: #4A5568; /* gray-700 */
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .nav-link:hover {
+            background-color: #E2E8F0; /* gray-200 */
+            color: #2D3748; /* gray-800 */
+        }
+        .active-nav-link {
+            background-color: #68D391; /* green-400 */
+            color: white !important;
+        }
+        .footer-bg {
+            background-color: #F7FAFC; /* gray-100 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-green-600">もちの樹</a>
+            <div class="hidden md:flex space-x-4">
+                <a href="#home" class="nav-link active-nav-link">ホーム</a>
+                <a href="#concept" class="nav-link">コンセプト</a>
+                <a href="#menu" class="nav-link">メニュー</a>
+                <a href="#garden" class="nav-link">お庭</a>
+                <a href="#workshop" class="nav-link">ワークショップ</a>
+                <a href="#access" class="nav-link">アクセス</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
+            <a href="#home" class="block py-2 px-4 text-sm text-gray-700 hover:bg-green-100">ホーム</a>
+            <a href="#concept" class="block py-2 px-4 text-sm text-gray-700 hover:bg-green-100">コンセプト</a>
+            <a href="#menu" class="block py-2 px-4 text-sm text-gray-700 hover:bg-green-100">メニュー</a>
+            <a href="#garden" class="block py-2 px-4 text-sm text-gray-700 hover:bg-green-100">お庭</a>
+            <a href="#workshop" class="block py-2 px-4 text-sm text-gray-700 hover:bg-green-100">ワークショップ</a>
+            <a href="#access" class="block py-2 px-4 text-sm text-gray-700 hover:bg-green-100">アクセス</a>
+        </div>
+    </nav>
+
+    <header id="home" class="hero-bg h-screen flex items-center justify-center text-white relative">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="text-center z-10 p-4">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 drop-shadow-lg">カフェ「もちの樹」</h1>
+            <p class="text-xl md:text-2xl mb-8 drop-shadow-md">忙しい日々に、心安らぐひとときを。緑豊かな庭と手作りサンドイッチでおもてなし。</p>
+            <a href="#menu" class="btn btn-primary text-lg">メニューを見る</a>
+        </div>
+    </header>
+
+    <section id="concept" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title">私たちの想い</h2>
+            <div class="max-w-3xl mx-auto text-center">
+                <p class="concept-text mb-6">
+                    「もちの樹」は、日々を忙しく過ごす40代から50代の女性たちが、ふと立ち寄り、心からリラックスできる場所でありたいと願っています。
+                    閑静な住宅街に佇む隠れ家のような空間で、日常の喧騒を忘れ、穏やかな時間をお過ごしください。
+                </p>
+                <p class="concept-text mb-6">
+                    自慢の手作りサンドイッチは、新鮮な食材を使い、手軽でありながらも満足感のある味わいを追求しました。
+                    美しい庭を眺めながらのランチタイム、テイクアウトしてお気に入りの場所で楽しむピクニック。
+                    お客様のスタイルに合わせて、もちの樹の味をお楽しみいただけます。
+                </p>
+                <img src="https://placehold.co/600x400/E2F0D9/333333?text=くつろぎの店内風景" alt="カフェの落ち着いた店内" class="mx-auto rounded-lg shadow-lg mb-6">
+                <p class="concept-text">
+                    慌ただしい毎日の中に、もちの樹でのひとときが、小さな幸せと癒やしをもたらしますように。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title">手作りサンドイッチ</h2>
+            <p class="text-center text-gray-600 mb-12 text-lg max-w-2xl mx-auto">
+                新鮮な野菜やこだわりの具材をたっぷり使った、自慢のサンドイッチ。テイクアウトも可能です。
+            </p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/400x300/D4F0C4/333333?text=もちの樹特製BLTサンド" alt="BLTサンドイッチ" class="sandwich-img">
+                    <div class="p-6">
+                        <h3 class="menu-item-title mb-2">もちの樹特製BLTサンド</h3>
+                        <p class="menu-item-description mb-4">カリカリベーコンと新鮮トマト、シャキシャキレタスの王道サンド。</p>
+                        <p class="text-lg font-semibold text-green-600">¥850</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/400x300/C9E9C2/333333?text=アボカドとエビのバジルサンド" alt="アボカドとエビのサンドイッチ" class="sandwich-img">
+                    <div class="p-6">
+                        <h3 class="menu-item-title mb-2">アボカドとエビのバジルサンド</h3>
+                        <p class="menu-item-description mb-4">プリプリのエビと濃厚アボカドに、爽やかなバジルソースがアクセント。</p>
+                        <p class="text-lg font-semibold text-green-600">¥980</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/400x300/BDE3B1/333333?text=季節のフルーツサンド" alt="フルーツサンド" class="sandwich-img">
+                    <div class="p-6">
+                        <h3 class="menu-item-title mb-2">季節のフルーツサンド</h3>
+                        <p class="menu-item-description mb-4">旬のフルーツを贅沢に使った、見た目も華やかなデザートサンド。</p>
+                        <p class="text-lg font-semibold text-green-600">¥780</p>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/400x300/B2DCAB/333333?text=グリルチキンと彩り野菜サンド" alt="グリルチキンサンド" class="sandwich-img">
+                    <div class="p-6">
+                        <h3 class="menu-item-title mb-2">グリルチキンと彩り野菜サンド</h3>
+                        <p class="menu-item-description mb-4">香ばしいグリルチキンと新鮮なパプリカやズッキーニを挟みました。</p>
+                        <p class="text-lg font-semibold text-green-600">¥920</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/400x300/A7D6A4/333333?text=たまごたっぷりサンド" alt="たまごサンド" class="sandwich-img">
+                    <div class="p-6">
+                        <h3 class="menu-item-title mb-2">たまごたっぷりサンド</h3>
+                        <p class="menu-item-description mb-4">自家製たまごフィリングをたっぷり使用した、シンプルながらも奥深い味わい。</p>
+                        <p class="text-lg font-semibold text-green-600">¥700</p>
+                    </div>
+                </div>
+                 <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/400x300/9CD09E/333333?text=自家製ローストビーフサンド" alt="ローストビーフサンド" class="sandwich-img">
+                    <div class="p-6">
+                        <h3 class="menu-item-title mb-2">自家製ローストビーフサンド</h3>
+                        <p class="menu-item-description mb-4">低温でじっくり焼き上げた自家製ローストビーフを贅沢に使用。</p>
+                        <p class="text-lg font-semibold text-green-600">¥1200</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#" class="btn btn-primary text-lg">全てのメニューを見る</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="garden" class="py-16 md:py-24 bg-green-50">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title">癒やしの庭</h2>
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="md:w-1/2">
+                    <img src="https://placehold.co/600x450/A2D9A0/333333?text=四季折々の表情を見せる庭" alt="カフェの美しい庭" class="rounded-lg shadow-xl w-full">
+                </div>
+                <div class="md:w-1/2">
+                    <h3 class="section-subtitle text-left">木漏れ日の中で、深呼吸</h3>
+                    <p class="concept-text mb-4">
+                        「もちの樹」の自慢は、四季折々の表情を見せる美しい庭。
+                        春には優しい花々が咲き誇り、夏には木陰が涼を運び、秋には紅葉が彩り、冬には静寂が心を落ち着かせます。
+                    </p>
+                    <p class="concept-text mb-4">
+                        お席からはもちろん、庭を散策することも可能です。
+                        鳥のさえずりや風の音に耳を澄ませ、自然の中でゆったりとした時間をお過ごしください。
+                        忙しい日常を忘れ、心身ともにリフレッシュできる空間です。
+                    </p>
+                    <img src="https://placehold.co/600x400/B8E0B0/333333?text=庭を眺めるテラス席" alt="庭を眺めるテラス席" class="rounded-lg shadow-lg w-full mt-4 md:mt-0">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="workshop" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title">手作りを楽しむ時間</h2>
+            <p class="text-center text-gray-600 mb-12 text-lg max-w-2xl mx-auto">
+                「もちの樹」では、アクセサリー作りやフラワーアレンジメントなど、様々なワークショップを定期的に開催しています。
+                初心者の方でも気軽にご参加いただけます。
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div>
+                    <img src="https://placehold.co/600x450/E6F5E0/333333?text=楽しそうなワークショップの様子" alt="ワークショップの風景" class="workshop-img mb-4 shadow-lg">
+                     <h3 class="section-subtitle">フラワーアレンジメント教室</h3>
+                    <p class="concept-text mb-4">
+                        季節の花々を使って、自分だけのオリジナルアレンジメントを作成します。
+                        お部屋に彩りを添える素敵な作品作りの時間を楽しみませんか？
+                        講師が丁寧に指導しますので、初めての方も安心してご参加ください。
+                    </p>
+                    <p class="concept-text font-semibold">開催日：毎月第2土曜日 14:00 - 16:00</p>
+                    <p class="concept-text font-semibold">参加費：¥4,500 (材料費込み、ワンドリンク付き)</p>
+                </div>
+                <div>
+                    <img src="https://placehold.co/600x450/D9EFD0/333333?text=手作りアクセサリーの作品例" alt="手作りアクセサリー" class="workshop-img mb-4 shadow-lg">
+                    <h3 class="section-subtitle">アクセサリー作り</h3>
+                    <p class="concept-text mb-4">
+                        オリジナルのネックレスやピアス、ブレスレットを作ります。
+                        自分用にはもちろん、大切な方へのプレゼントにも最適です。
+                        作る楽しさ、身につける喜びを感じてください。
+                    </p>
+                    <p class="concept-text font-semibold">開催日：毎月第4日曜日 10:00 - 12:00</p>
+                    <p class="concept-text font-semibold">参加費：¥3,800 (材料費込み、ワンドリンク付き)</p>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#" class="btn btn-primary text-lg">最新のワークショップ情報</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="access" class="py-16 md:py-24 footer-bg">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title">アクセス</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="section-subtitle text-left">カフェ「もちの樹」</h3>
+                    <p class="concept-text mb-2"><strong>住所:</strong> 〒XXX-XXXX 東京都静区庭園町1-2-3</p>
+                    <p class="concept-text mb-2"><strong>電話番号:</strong> 03-XXXX-XXXX</p>
+                    <p class="concept-text mb-2"><strong>営業時間:</strong></p>
+                    <ul class="list-disc list-inside concept-text ml-4 mb-2">
+                        <li>火～金: 10:00 - 18:00 (L.O. 17:30)</li>
+                        <li>土・日・祝: 9:00 - 19:00 (L.O. 18:30)</li>
+                    </ul>
+                    <p class="concept-text mb-2"><strong>定休日:</strong> 月曜日 (祝日の場合は翌火曜日)</p>
+                    <p class="concept-text mb-4">
+                        閑静な住宅街の中にございます。お越しの際は、地図をご確認ください。
+                        駐車場はございませんので、近隣のコインパーキングをご利用いただくか、公共交通機関でお越しください。
+                    </p>
+                    <div class="mt-4">
+                        <a href="#" class="text-green-600 hover:text-green-800 mr-4 text-2xl"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="#" class="text-green-600 hover:text-green-800 text-2xl"><i class="fab fa-facebook-square"></i> Facebook</a>
+                        </div>
+                </div>
+                <div>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.7477999999997!2d139.7454329152586!3d35.67619198019961!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188bfbd89f7001%3A0x7502e0750a8a0f13!2sImperial%20Palace!5e0!3m2!1sen!2sjp!4v1620000000000!5m2!1sen!2sjp" 
+                        width="100%" 
+                        height="400" 
+                        style="border:0; border-radius: 0.5rem;" 
+                        allowfullscreen="" 
+                        loading="lazy"
+                        title="カフェ「もちの樹」の場所">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-700 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 もちの樹　by SATTVA. All Rights Reserved.</p>
+            <p class="text-sm mt-2">癒やしの空間で、特別なひとときを。</p>
+        </div>
+    </footer>
+
+    <script>
+        // モバイルメニューのトグル
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // スムーズスクロールとアクティブなナビゲーションリンクの処理
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+                // モバイルメニューが開いていれば閉じる
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // スクロールに応じてナビゲーションリンクのアクティブ状態を更新
+        const sections = document.querySelectorAll('section[id], header[id]');
+        const navLinks = document.querySelectorAll('nav a.nav-link');
+        const mobileNavLinks = document.querySelectorAll('#mobile-menu a');
+
+        function changeLinkState() {
+            let index = sections.length;
+
+            while(--index && window.scrollY + 100 < sections[index].offsetTop) {} // 100pxのオフセットを追加
+            
+            navLinks.forEach((link) => link.classList.remove('active-nav-link'));
+            mobileNavLinks.forEach((link) => link.classList.remove('active-nav-link')); // モバイルも同様に
+
+            // 対応するセクションIDを持つリンクにクラスを追加
+            const activeSectionId = sections[index] ? sections[index].id : null;
+            if (activeSectionId) {
+                const activeLink = document.querySelector(`nav a.nav-link[href="#${activeSectionId}"]`);
+                const activeMobileLink = document.querySelector(`#mobile-menu a[href="#${activeSectionId}"]`);
+                if (activeLink) activeLink.classList.add('active-nav-link');
+                if (activeMobileLink) activeMobileLink.classList.add('active-nav-link');
+            } else {
+                 // どのセクションにも一致しない場合（例：一番上）、Homeをアクティブにする
+                const homeLink = document.querySelector('nav a.nav-link[href="#home"]');
+                const homeMobileLink = document.querySelector('#mobile-menu a[href="#home"]');
+                if (homeLink) homeLink.classList.add('active-nav-link');
+                if (homeMobileLink) homeMobileLink.classList.add('active-nav-link');
+            }
+        }
+
+        window.addEventListener('scroll', changeLinkState);
+        window.addEventListener('load', changeLinkState); // ページ読み込み時にも実行
+
+        // Font Awesome の読み込み (もしSNSアイコンなどを使用する場合)
+        const fontAwesomeScript = document.createElement('script');
+        fontAwesomeScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js';
+        fontAwesomeScript.defer = true;
+        document.head.appendChild(fontAwesomeScript);
+
+    </script>
+</body>
+</html>
