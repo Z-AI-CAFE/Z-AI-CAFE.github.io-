@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URLナビゲーター</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f3f4f6; /* Tailwind bg-gray-100 */
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px; /* 最大幅を設定 */
+            margin-top: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 60vh; /* ビューポートの高さの60% */
+            border: 1px solid #d1d5db; /* Tailwind border-gray-300 */
+            border-radius: 8px;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* ボタン間のスペース */
+            flex-wrap: wrap; /* ボタンが多すぎる場合に折り返す */
+        }
+        .controls button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            background-color: #3b82f6; /* Tailwind bg-blue-500 */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .controls button:hover {
+            background-color: #2563eb; /* Tailwind bg-blue-600 */
+        }
+        .controls button:disabled {
+            background-color: #9ca3af; /* Tailwind bg-gray-400 */
+            cursor: not-allowed;
+        }
+        .url-display {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e5e7eb; /* Tailwind bg-gray-200 */
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9em;
+            word-break: break-all; /* URLが長い場合に折り返す */
+        }
+        .error-message {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fee2e2; /* Tailwind bg-red-100 */
+            color: #b91c1c; /* Tailwind text-red-700 */
+            border: 1px solid #fecaca; /* Tailwind border-red-300 */
+            border-radius: 6px;
+            text-align: center;
+            display: none; /* 初期状態では非表示 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-2xl font-bold text-center mb-5">URLナビゲーター</h1>
+
+        <iframe id="contentFrame" src="" title="コンテンツ表示エリア">
+            お使いのブラウザはiframeをサポートしていません。
+        </iframe>
+
+        <div id="errorMessage" class="error-message">
+            このウェブサイトはiframe内での表示を許可していません。
+            <a id="directLink" href="#" target="_blank" class="text-blue-600 hover:underline">新しいタブで開く</a>
+        </div>
+
+        <div class="url-display">
+            現在のURL: <span id="currentUrlDisplay"></span>
+        </div>
+
+        <div class="controls">
+            <button id="firstBtn" class="rounded">先頭</button>
+            <button id="prevBtn" class="rounded">前へ</button>
+            <button id="nextBtn" class="rounded">次へ</button>
+            <button id="lastBtn" class="rounded">最後</button>
+        </div>
+    </div>
+
+    <script>
+        const urls = [
+            "https://www.buffett-code.com/company/2301/",
+            "https://www.buffett-code.com/company/2986/",
+            "https://www.buffett-code.com/company/3252/"
+            // 必要に応じて他のURLを追加できます
+        ];
+        let currentIndex = 0;
+
+        const iframe = document.getElementById('contentFrame');
+        const currentUrlDisplay = document.getElementById('currentUrlDisplay');
+        const firstBtn = document.getElementById('firstBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const lastBtn = document.getElementById('lastBtn');
+        const errorMessageDiv = document.getElementById('errorMessage');
+        const directLink = document.getElementById('directLink');
+
+        function loadUrl(index) {
+            if (index < 0 || index >= urls.length) {
+                console.error("無効なインデックス:", index);
+                return;
+            }
+            currentIndex = index;
+            const url = urls[currentIndex];
+            iframe.src = url;
+            currentUrlDisplay.textContent = url;
+            directLink.href = url; // エラーメッセージ内のリンクも更新
+            updateButtonStates();
+            // iframeの読み込みエラーを監視 (X-Frame-Optionsなどによるブロックを検知)
+            iframe.onload = function() {
+                try {
+                    // iframeのコンテンツにアクセスしようとすると、クロスオリジンエラーが発生する場合がある
+                    // アクセスできれば表示されているとみなす (ただし、完全ではない)
+                    // eslint-disable-next-line no-unused-vars
+                    const contentDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    errorMessageDiv.style.display = 'none'; // 表示成功ならエラーメッセージを隠す
+                } catch (e) {
+                    // セキュリティポリシーにより表示がブロックされた可能性
+                    errorMessageDiv.style.display = 'block';
+                    console.warn("iframeのコンテンツにアクセスできませんでした。表示がブロックされている可能性があります。", e);
+                }
+            };
+            iframe.onerror = function() {
+                // onerrorは必ずしもX-Frame-Optionsエラーをキャッチしない
+                errorMessageDiv.style.display = 'block';
+                console.error("iframeの読み込みエラー:", url);
+            };
+        }
+
+        function updateButtonStates() {
+            firstBtn.disabled = currentIndex === 0;
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === urls.length - 1;
+            lastBtn.disabled = currentIndex === urls.length - 1;
+        }
+
+        firstBtn.addEventListener('click', () => loadUrl(0));
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                loadUrl(currentIndex - 1);
+            }
+        });
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < urls.length - 1) {
+                loadUrl(currentIndex + 1);
+            }
+        });
+        lastBtn.addEventListener('click', () => loadUrl(urls.length - 1));
+
+        // 初期URLを読み込む
+        if (urls.length > 0) {
+            loadUrl(0);
+        } else {
+            currentUrlDisplay.textContent = "URLリストが空です。";
+            firstBtn.disabled = true;
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            lastBtn.disabled = true;
+        }
+    </script>
+</body>
+</html>
